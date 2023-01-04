@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.consumo.entity.Consumer;
 import com.consumo.entity.Consumo;
 import com.consumo.service.IConsumoService;
 @RestController
@@ -19,6 +21,11 @@ public class ConsumoRestController {
 	@GetMapping("/findAll")
 	public List<Consumo> list() {
 		return consumoService.list();
+	}
+	
+	@GetMapping("/daily")
+	public List<Double> daily(@RequestBody Consumer request){
+		return consumoService.getConsumoByDate(request.getDate());
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.consumo.entity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -24,14 +25,14 @@ public class Consumo implements Serializable {
 	private Integer id;
 
 	@Column(name = "active_energy")
-	private String activeEnergy;
+	private Double activeEnergy;
 
 	@Column(name = "meter_date")
 	private Date meterDate;
 
 	@Column(name = "meter_id")
 	private String meterId;
-
+	
 	@Column(name = "meter_hour")
 	private String meterHour;
 }

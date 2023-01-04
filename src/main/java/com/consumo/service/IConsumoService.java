@@ -9,4 +9,7 @@ import com.consumo.entity.Consumo;
 @Service
 public interface IConsumoService {
 	List<Consumo> list();
+	
+	List<Double> getConsumoByDate(String string);
+
 }
