@@ -32,5 +32,10 @@ public class ConsumoRestController {
 	public List<Double> monthly(@RequestBody Consumer request){
 		return consumoService.getConsumoByMonth(request.getDate());
 	}
+	
+	@GetMapping("/weekly")
+	public List<Double> weekly(@RequestBody Consumer request){
+		return consumoService.getConsumoByWeek(request.getDate());
+	}
 
 }

@@ -13,4 +13,6 @@ public interface IConsumoService {
 	List<Double> getConsumoByDate(String string);
 
 	List<Double> getConsumoByMonth(String meter_date);
+	
+	List<Double> getConsumoByWeek(String meter_date);
 }
