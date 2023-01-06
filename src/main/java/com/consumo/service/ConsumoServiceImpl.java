@@ -23,13 +23,13 @@ public class ConsumoServiceImpl implements IConsumoService {
 	}
 
 	@Override
-	public List<Double> getConsumoByDate(String meter_date) {
+	public List<Double> getConsumoByDate(String meterDate) {
 		double mayor = 0;
 		double menor = 9999999;
 		double consumoDiario = 0;
 		String startWith = "00";
 
-		List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(meter_date);
+		List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(meterDate);
 		List<Double> consumosPorHora = new ArrayList<>();
 
 		for (int i = 1; i <= 24; i++) {
@@ -46,7 +46,7 @@ public class ConsumoServiceImpl implements IConsumoService {
 			if (i >= 11 && i < 24) {
 				startWith = String.valueOf(i);
 			} else if (startWith.startsWith("0")) {
-				startWith = "0" + String.valueOf(i);
+				startWith = String.valueOf("0" + i);
 			}
 			consumoDiario = mayor - menor;
 			consumosPorHora.add(consumoDiario);
@@ -56,8 +56,8 @@ public class ConsumoServiceImpl implements IConsumoService {
 	}
 
 	@Override
-	public List<Double> getConsumoByMonth(String meter_date) {
-		String[] dateParts = meter_date.split("-");
+	public List<Double> getConsumoByMonth(String meterDate) {
+		String[] dateParts = meterDate.split("-");
 		String year = dateParts[0];
 		String month = dateParts[1];
 
@@ -66,9 +66,9 @@ public class ConsumoServiceImpl implements IConsumoService {
 		for (int i = 1; i <= 31; i++) {
 			String datettt = "00";
 			if (i >= 1 && i <= 9) {
-				datettt = year + "-" + month + "-0" + String.valueOf(i);
+				datettt = String.valueOf(year + "-" + month + "-0" + i);
 			} else {
-				datettt = year + "-" + month + "-" + String.valueOf(i);
+				datettt = String.valueOf(year + "-" + month + "-" + i);
 			}
 
 			getConsumosByDay(datettt, resultados);
@@ -79,7 +79,7 @@ public class ConsumoServiceImpl implements IConsumoService {
 	}
 
 	@Override
-	public List<Double> getConsumoByWeek(String meter_date) {
+	public List<Double> getConsumoByWeek(String meterDate) {
 		// Crea un objeto Calendar para representar la fecha de hoy
 		Calendar hoy = Calendar.getInstance();
 
@@ -103,9 +103,16 @@ public class ConsumoServiceImpl implements IConsumoService {
 		return resultados;
 	}
 
-	private void getConsumosByDay(String meter_date, List<Double> consumosByDay) {
+	/**
+	 * Calcula los consumos por día de una fecha específica.
+	 * 
+	 * @param meter_date    a calcular los consumos por día.
+	 * @param consumosByDay lista a agregar el consumo diario.
+	 * @author Juan Carlos Estevez Vargas.
+	 */
+	private void getConsumosByDay(String meterDate, List<Double> consumosByDay) {
 		try {
-			List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(meter_date);
+			List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(meterDate);
 			if (consumosPorDia != null) {
 				Double menor = consumosPorDia.get(0).getActiveEnergy();
 				Double mayor = consumosPorDia.get(consumosPorDia.size() - 1).getActiveEnergy();
@@ -115,7 +122,6 @@ public class ConsumoServiceImpl implements IConsumoService {
 				consumosByDay.add(0.0);
 			}
 		} catch (Exception e) {
-			System.err.println("Pasó un error");
 			consumosByDay.add(0.0);
 		}
 	}
