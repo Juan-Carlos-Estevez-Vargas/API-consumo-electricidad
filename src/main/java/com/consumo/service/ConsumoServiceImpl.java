@@ -24,35 +24,35 @@ public class ConsumoServiceImpl implements IConsumoService {
 
 	@Override
 	public List<Double> getConsumoByDate(String meterDate) {
-		double mayor = 0;
-		double menor = 9999999;
-		double consumoDiario = 0;
+		double maximumConsumption = 0;
+		double minimumConsumption = 9999999;
+		double dailyConsumption = 0;
 		String startWith = "00";
 
-		List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(meterDate);
-		List<Double> consumosPorHora = new ArrayList<>();
+		List<Consumo> consumptionPerDay = consumoRepository.getConsumoByDate(meterDate);
+		List<Double> consumptionPerHour = new ArrayList<>();
 
 		for (int i = 1; i <= 24; i++) {
-			for (Consumo consumo : consumosPorDia) {
-				if (consumo.getMeterHour().startsWith(startWith)) {
-					if (consumo.getActiveEnergy() > mayor) {
-						mayor = consumo.getActiveEnergy();
+			for (Consumo consumption : consumptionPerDay) {
+				if (consumption.getMeterHour().startsWith(startWith)) {
+					if (consumption.getActiveEnergy() > maximumConsumption) {
+						maximumConsumption = consumption.getActiveEnergy();
 					}
-					if (consumo.getActiveEnergy() < menor) {
-						menor = consumo.getActiveEnergy();
+					if (consumption.getActiveEnergy() < minimumConsumption) {
+						minimumConsumption = consumption.getActiveEnergy();
 					}
 				}
 			}
-			if (i >= 11 && i < 24) {
+			if (i >= 11) {
 				startWith = String.valueOf(i);
-			} else if (startWith.startsWith("0")) {
+			} else {
 				startWith = String.valueOf("0" + i);
 			}
-			consumoDiario = mayor - menor;
-			consumosPorHora.add(consumoDiario);
+			dailyConsumption = maximumConsumption - minimumConsumption;
+			consumptionPerHour.add(dailyConsumption);
 		}
 
-		return consumosPorHora;
+		return consumptionPerHour;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class ConsumoServiceImpl implements IConsumoService {
 		List<Double> resultados = new ArrayList<>();
 
 		for (int i = 1; i <= 31; i++) {
-			String datettt = "00";
+			String datettt;
 			if (i >= 1 && i <= 9) {
 				datettt = String.valueOf(year + "-" + month + "-0" + i);
 			} else {

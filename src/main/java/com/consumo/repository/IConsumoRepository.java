@@ -18,7 +18,7 @@ public interface IConsumoRepository extends CrudRepository<Consumo, Integer> {
 	 * @return Lista de tipo Consumo con los registros encontrados.
 	 * @author Juan Carlos Estevez Vargas.
 	 */
-	@Query(value = "SELECT * FROM CONSUMOS WHERE METER_DATE=:meter_date", nativeQuery = true)
-	List<Consumo> getConsumoByDate(String meter_date);
+	@Query(value = "SELECT * FROM CONSUMOS WHERE METER_DATE=:meterDate", nativeQuery = true)
+	List<Consumo> getConsumoByDate(String meterDate);
 
 }

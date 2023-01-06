@@ -1,5 +1,6 @@
 package com.consumo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class ConsumoRestController {
 		if (request.getPeriod().equalsIgnoreCase("daily")) {
 			return consumoService.getConsumoByDate(request.getDate());
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@GetMapping("/monthly")
@@ -37,7 +38,7 @@ public class ConsumoRestController {
 		if (request.getPeriod().equalsIgnoreCase("monthly")) {
 			return consumoService.getConsumoByMonth(request.getDate());
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@GetMapping("/weekly")
@@ -45,7 +46,7 @@ public class ConsumoRestController {
 		if (request.getPeriod().equalsIgnoreCase("weekly")) {
 			return consumoService.getConsumoByWeek(request.getDate());
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 }
