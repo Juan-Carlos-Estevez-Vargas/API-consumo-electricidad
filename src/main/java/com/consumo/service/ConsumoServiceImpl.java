@@ -70,20 +70,8 @@ public class ConsumoServiceImpl implements IConsumoService {
 			} else {
 				datettt = year + "-" + month + "-" + String.valueOf(i);
 			}
-			try {
-				List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(datettt);
-				if (consumosPorDia != null) {
-					Double menor = consumosPorDia.get(0).getActiveEnergy();
-					Double mayor = consumosPorDia.get(consumosPorDia.size() - 1).getActiveEnergy();
-					Double consumoDia = mayor - menor;
-					resultados.add(consumoDia);
-				} else {
-					resultados.add(0.0);
-				}
-			} catch (Exception e) {
-				System.err.println("Pasó un error");
-				resultados.add(0.0);
-			}
+
+			getConsumosByDay(datettt, resultados);
 
 		}
 
@@ -93,42 +81,42 @@ public class ConsumoServiceImpl implements IConsumoService {
 	@Override
 	public List<Double> getConsumoByWeek(String meter_date) {
 		// Crea un objeto Calendar para representar la fecha de hoy
-	    Calendar hoy = Calendar.getInstance();
+		Calendar hoy = Calendar.getInstance();
 
-	    // Establece la fecha en la que quieres calcular la semana
-	    hoy.set(2022, Calendar.OCTOBER, 26);
+		// Establece la fecha en la que quieres calcular la semana
+		hoy.set(2022, Calendar.OCTOBER, 26);
 
-	    // Obtiene el día de la semana de la fecha establecida
-	    int diaSemana = hoy.get(Calendar.DAY_OF_WEEK);
-	    List<Double> resultados = new ArrayList<>();
+		// Obtiene el día de la semana de la fecha establecida
+		int diaSemana = hoy.get(Calendar.DAY_OF_WEEK);
+		List<Double> resultados = new ArrayList<>();
 
-	    // Obtiene el primer día de la semana (lunes)
-	    hoy.add(Calendar.DATE, -diaSemana + Calendar.MONDAY);
+		// Obtiene el primer día de la semana (lunes)
+		hoy.add(Calendar.DATE, -diaSemana + Calendar.MONDAY);
 
-	    // Imprime las fechas de la semana
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	    for (int i = 0; i < 7; i++) {
-	      System.out.println(sdf.format(hoy.getTime()));
-	      hoy.add(Calendar.DATE, 1);
-	      try {
-				List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(sdf.format(hoy.getTime()));
-				if (consumosPorDia != null) {
-					Double menor = consumosPorDia.get(0).getActiveEnergy();
-					Double mayor = consumosPorDia.get(consumosPorDia.size() - 1).getActiveEnergy();
-					Double consumoDia = mayor - menor;
-					resultados.add(consumoDia);
-				} else {
-					resultados.add(0.0);
-				}
-			} catch (Exception e) {
-				System.err.println("Pasó un error");
-				resultados.add(0.0);
-			}
-	    }
-		
-		
-		
+		// Imprime las fechas de la semana
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		for (int i = 0; i < 7; i++) {
+			hoy.add(Calendar.DATE, 1);
+			getConsumosByDay(sdf.format(hoy.getTime()), resultados);
+		}
+
 		return resultados;
 	}
 
+	private void getConsumosByDay(String meter_date, List<Double> consumosByDay) {
+		try {
+			List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(meter_date);
+			if (consumosPorDia != null) {
+				Double menor = consumosPorDia.get(0).getActiveEnergy();
+				Double mayor = consumosPorDia.get(consumosPorDia.size() - 1).getActiveEnergy();
+				Double consumoDia = mayor - menor;
+				consumosByDay.add(consumoDia);
+			} else {
+				consumosByDay.add(0.0);
+			}
+		} catch (Exception e) {
+			System.err.println("Pasó un error");
+			consumosByDay.add(0.0);
+		}
+	}
 }
