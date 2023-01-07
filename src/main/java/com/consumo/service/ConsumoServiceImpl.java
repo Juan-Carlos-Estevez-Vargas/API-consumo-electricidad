@@ -103,7 +103,7 @@ public class ConsumoServiceImpl implements IConsumoService {
 		Calendar date = Calendar.getInstance();
 
 		// Establece la fecha en la que quieres calcular la semana
-		date.set(Integer.parseInt(year), evaluateMonth(Integer.parseInt(month) - 1, date), Integer.parseInt(day));
+		date.set(Integer.parseInt(year), Integer.parseInt(month) - 1, Integer.parseInt(day));
 
 		// Obtiene el día de la semana de la fecha establecida
 		int diaSemana = date.get(Calendar.DAY_OF_WEEK);
@@ -143,18 +143,6 @@ public class ConsumoServiceImpl implements IConsumoService {
 			mapa.put(meterDate, 0.0);
 		}
 
-	}
-
-	private int evaluateMonth(int month, Calendar date) {
-	    int[] months = {
-	        Calendar.JANUARY, Calendar.FEBRUARY, Calendar.MARCH, Calendar.APRIL,
-	        Calendar.MAY, Calendar.JUNE, Calendar.JULY, Calendar.AUGUST,
-	        Calendar.SEPTEMBER, Calendar.OCTOBER, Calendar.NOVEMBER, Calendar.DECEMBER
-	    };
-	    if (month < 0 || month >= months.length) {
-	        throw new IllegalArgumentException("Unexpected value: " + month);
-	    }
-	    return months[month];
 	}
 
 }
