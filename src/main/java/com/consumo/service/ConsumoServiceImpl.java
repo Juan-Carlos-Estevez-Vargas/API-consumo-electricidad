@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,7 @@ public class ConsumoServiceImpl implements IConsumoService {
 		return (List<Consumo>) consumoRepository.findAll();
 	}
 
-	// TODO arreglar el método que NO esta funcionando bien.
-	@Override
+	/*@Override
 	public List<Double> getConsumoByDate(String meterDate) {
 		double maximumConsumption = 0;
 		double minimumConsumption = 9999999;
@@ -67,7 +68,23 @@ public class ConsumoServiceImpl implements IConsumoService {
 		}
 
 		return consumptionPerHour;
+	}*/
+	@Override
+	public List<Double> getConsumoByDate(String meterDate) {
+	    List<Consumo> consumptionPerDay = consumoRepository.getConsumoByDate(meterDate);
+
+	    return IntStream.range(0, 24)
+	        .mapToObj(i -> String.format("%02d", i))
+	        .map(hour -> consumptionPerDay.stream()
+	            .filter(consumption -> consumption.getMeterHour().startsWith(hour))
+	            .mapToDouble(Consumo::getActiveEnergy)
+	            .summaryStatistics())
+	        .mapToDouble(statistics -> statistics.getMax() - statistics.getMin())
+	        .boxed()
+	        .map(consumption -> consumption == -9999999 ? 0.0 : consumption)
+	        .collect(Collectors.toList());
 	}
+
 
 	@Override
 	public List<Double> getConsumoByMonth(String meterDate) {
