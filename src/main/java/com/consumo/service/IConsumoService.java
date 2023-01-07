@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.consumo.entity.Consumo;
+import com.consumo.entity.ElectricalConsumtion;
 
 @Service
 public interface IConsumoService {
@@ -17,7 +17,7 @@ public interface IConsumoService {
 	 * @return Lista con los datos obtenidos de la base de datos.
 	 * @author Juan Carlos Estevez Vargas;
 	 */
-	List<Consumo> list();
+	List<ElectricalConsumtion> list();
 
 	/**
 	 * Calcula y obtiene los consumos por hora de una fecha especificada.
@@ -26,7 +26,7 @@ public interface IConsumoService {
 	 * @return Listado con los consumos por hora.
 	 * @author Juan Carlos Estevz Vargas.
 	 */
-	Map<String, Double> getConsumoByDate(String meterDate);
+	Map<String, Double> getConsumptionByDate(String meterDate);
 
 	/**
 	 * Calcula y obtiene los consumos de electridad diario en un periodo de un mes,
@@ -47,5 +47,5 @@ public interface IConsumoService {
 	 * @return Listado con los consumos diarios.
 	 * @author Juan Carlos Estevz Vargas.
 	 */
-	Map<String, Double> getConsumoByWeek(String meterDate);
+	Map<String, Double> getConsumptionByWeek(String meterDate);
 }

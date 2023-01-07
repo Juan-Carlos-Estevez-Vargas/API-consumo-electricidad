@@ -10,42 +10,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.consumo.entity.Consumer;
-import com.consumo.entity.Consumo;
+import com.consumo.entity.RequestData;
+import com.consumo.entity.ElectricalConsumtion;
 import com.consumo.service.IConsumoService;
 
 @RestController
-@RequestMapping("/consumo")
-public class ConsumoRestController {
+@RequestMapping("/consumption")
+public class ConsumptionRestController {
 
 	@Autowired
-	private IConsumoService consumoService;
+	private IConsumoService consumptionService;
 
 	@GetMapping("/findAll")
-	public List<Consumo> list() {
-		return consumoService.list();
+	public List<ElectricalConsumtion> list() {
+		return consumptionService.list();
 	}
 
 	@GetMapping("/daily")
-	public Map<String, Double> daily(@RequestBody Consumer request) {
+	public Map<String, Double> daily(@RequestBody RequestData request) {
 		if (request.getPeriod().equalsIgnoreCase("daily")) {
-			return consumoService.getConsumoByDate(request.getDate());
+			return consumptionService.getConsumptionByDate(request.getDate());
 		}
 		return new HashMap<>();
 	}
 
 	@GetMapping("/monthly")
-	public Map<String, Double> monthly(@RequestBody Consumer request) {
+	public Map<String, Double> monthly(@RequestBody RequestData request) {
 		if (request.getPeriod().equalsIgnoreCase("monthly")) {
-			return consumoService.getConsumoByMonth(request.getDate());
+			return consumptionService.getConsumoByMonth(request.getDate());
 		}
 		return new HashMap<>();
 	}
 
 	@GetMapping("/weekly")
-	public Map<String, Double> weekly(@RequestBody Consumer request) {
+	public Map<String, Double> weekly(@RequestBody RequestData request) {
 		if (request.getPeriod().equalsIgnoreCase("weekly")) {
-			return consumoService.getConsumoByWeek(request.getDate());
+			return consumptionService.getConsumptionByWeek(request.getDate());
 		}
 		return new HashMap<>();
 	}

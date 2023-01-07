@@ -14,7 +14,7 @@ import lombok.Data;
 @Entity
 @Table(name = "consumos")
 @Data
-public class Consumo implements Serializable {
+public class ElectricalConsumtion implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.consumo.entity.Consumo;
+import com.consumo.entity.ElectricalConsumtion;
 
 @Repository
-public interface IConsumoRepository extends CrudRepository<Consumo, Integer> {
+public interface IConsumptionRepository extends CrudRepository<ElectricalConsumtion, Integer> {
 
 	/**
 	 * Obtiene los registros de consumo de electricidad en una fecha especifica.
@@ -19,6 +19,6 @@ public interface IConsumoRepository extends CrudRepository<Consumo, Integer> {
 	 * @author Juan Carlos Estevez Vargas.
 	 */
 	@Query(value = "SELECT * FROM CONSUMOS WHERE METER_DATE=:meterDate", nativeQuery = true)
-	List<Consumo> getConsumoByDate(String meterDate);
+	List<ElectricalConsumtion> getConsumptionByDate(String meterDate);
 
 }

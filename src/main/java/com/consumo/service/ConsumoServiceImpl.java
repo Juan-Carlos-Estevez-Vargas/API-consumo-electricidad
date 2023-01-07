@@ -10,36 +10,36 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.consumo.entity.Consumo;
-import com.consumo.repository.IConsumoRepository;
+import com.consumo.entity.ElectricalConsumtion;
+import com.consumo.repository.IConsumptionRepository;
 
 @Service
 public class ConsumoServiceImpl implements IConsumoService {
 
 	@Autowired
-	private IConsumoRepository consumoRepository;
+	private IConsumptionRepository consumptionRepository;
 
 	@Override
-	public List<Consumo> list() {
-		return (List<Consumo>) consumoRepository.findAll();
+	public List<ElectricalConsumtion> list() {
+		return (List<ElectricalConsumtion>) consumptionRepository.findAll();
 	}
 
 	@Override
-	public Map<String, Double> getConsumoByDate(String meterDate) {
+	public Map<String, Double> getConsumptionByDate(String meterDate) {
 		double maximumConsumption = 0;
 		double minimumConsumption;
 		double dailyConsumption = 0;
 		String startWith = "00";
 
 		SortedMap<String, Double> consumptionPerHour = new TreeMap<>();
-		List<Consumo> consumptionPerDay = consumoRepository.getConsumoByDate(meterDate);
+		List<ElectricalConsumtion> consumptionPerDay = consumptionRepository.getConsumptionByDate(meterDate);
 
 		for (int i = 1; i <= 24; i++) { // Recorriendo la 24 horas del día
 
 			maximumConsumption = 0;
 			minimumConsumption = 9999999;
 
-			for (Consumo consumption : consumptionPerDay) { // Por cada consumo
+			for (ElectricalConsumtion consumption : consumptionPerDay) { // Por cada consumo
 				if (consumption.getMeterHour().startsWith(startWith)) {
 					if (consumption.getActiveEnergy() > maximumConsumption) {
 						maximumConsumption = consumption.getActiveEnergy();
@@ -83,7 +83,7 @@ public class ConsumoServiceImpl implements IConsumoService {
 				datettt = String.valueOf(year + "-" + month + "-" + i);
 			}
 
-			getConsumosByDay(datettt, mapa);
+			getConsumptionsByDay(datettt, mapa);
 
 		}
 
@@ -92,8 +92,10 @@ public class ConsumoServiceImpl implements IConsumoService {
 	}
 
 	@Override
-	public Map<String, Double> getConsumoByWeek(String meterDate) {
+	public Map<String, Double> getConsumptionByWeek(String meterDate) {
 		SortedMap<String, Double> consumptionPerDays = new TreeMap<>();
+		
+		// Separando los datos de la fecha
 		String[] dateParts = meterDate.split("-");
 		String year = dateParts[0];
 		String month = dateParts[1];
@@ -106,16 +108,15 @@ public class ConsumoServiceImpl implements IConsumoService {
 		date.set(Integer.parseInt(year), Integer.parseInt(month) - 1, Integer.parseInt(day));
 
 		// Obtiene el día de la semana de la fecha establecida
-		int diaSemana = date.get(Calendar.DAY_OF_WEEK);
+		int dayOfWeek = date.get(Calendar.DAY_OF_WEEK);
 
 		// Obtiene el primer día de la semana (lunes)
-		date.add(Calendar.DATE, -diaSemana - 1 + Calendar.MONDAY);
+		date.add(Calendar.DATE, -dayOfWeek - 1 + Calendar.MONDAY);
 
-		// Imprime las fechas de la semana
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for (int i = 0; i < 7; i++) {
 			date.add(Calendar.DATE, 1);
-			getConsumosByDay(sdf.format(date.getTime()), consumptionPerDays);
+			getConsumptionsByDay(sdf.format(date.getTime()), consumptionPerDays);
 		}
 
 		return consumptionPerDays;
@@ -128,19 +129,19 @@ public class ConsumoServiceImpl implements IConsumoService {
 	 * @param consumosByDay lista a agregar el consumo diario.
 	 * @author Juan Carlos Estevez Vargas.
 	 */
-	private void getConsumosByDay(String meterDate, SortedMap<String, Double> mapa) {
+	private void getConsumptionsByDay(String meterDate, SortedMap<String, Double> map) {
 		try {
-			List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(meterDate);
-			if (consumosPorDia != null) {
-				Double menor = consumosPorDia.get(0).getActiveEnergy();
-				Double mayor = consumosPorDia.get(consumosPorDia.size() - 1).getActiveEnergy();
-				Double consumoDia = mayor - menor;
-				mapa.put(meterDate, consumoDia);
+			List<ElectricalConsumtion> consumptionsPerDay = consumptionRepository.getConsumptionByDate(meterDate);
+			if (consumptionsPerDay != null) {
+				Double minimunConsumption = consumptionsPerDay.get(0).getActiveEnergy();
+				Double maximunConsumption = consumptionsPerDay.get(consumptionsPerDay.size() - 1).getActiveEnergy();
+				Double consumptionPerDay = maximunConsumption - minimunConsumption;
+				map.put(meterDate, consumptionPerDay);
 			} else {
-				mapa.put(meterDate, 0.0);
+				map.put(meterDate, 0.0);
 			}
 		} catch (Exception e) {
-			mapa.put(meterDate, 0.0);
+			map.put(meterDate, 0.0);
 		}
 
 	}
