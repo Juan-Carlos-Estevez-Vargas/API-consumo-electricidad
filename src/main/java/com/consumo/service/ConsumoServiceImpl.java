@@ -22,6 +22,7 @@ public class ConsumoServiceImpl implements IConsumoService {
 		return (List<Consumo>) consumoRepository.findAll();
 	}
 
+	// TODO arreglar el método que NO esta funcionando bien.
 	@Override
 	public List<Double> getConsumoByDate(String meterDate) {
 		double maximumConsumption = 0;
@@ -32,24 +33,37 @@ public class ConsumoServiceImpl implements IConsumoService {
 		List<Consumo> consumptionPerDay = consumoRepository.getConsumoByDate(meterDate);
 		List<Double> consumptionPerHour = new ArrayList<>();
 
-		for (int i = 1; i <= 24; i++) {
-			for (Consumo consumption : consumptionPerDay) {
+		for (int i = 1; i <= 24; i++) { // Recorriendo la 24 horas del día
+
+			maximumConsumption = 0;
+			minimumConsumption = 9999999;
+			dailyConsumption = 0;
+
+			for (Consumo consumption : consumptionPerDay) { // Por cada consumo
 				if (consumption.getMeterHour().startsWith(startWith)) {
+					System.err.println(consumption.getMeterHour());
 					if (consumption.getActiveEnergy() > maximumConsumption) {
 						maximumConsumption = consumption.getActiveEnergy();
 					}
 					if (consumption.getActiveEnergy() < minimumConsumption) {
 						minimumConsumption = consumption.getActiveEnergy();
 					}
+
 				}
 			}
+
 			if (i >= 11) {
 				startWith = String.valueOf(i);
 			} else {
 				startWith = String.valueOf("0" + i);
 			}
 			dailyConsumption = maximumConsumption - minimumConsumption;
-			consumptionPerHour.add(dailyConsumption);
+
+			if (dailyConsumption != -9999999) {
+				consumptionPerHour.add(dailyConsumption);
+			} else {
+				consumptionPerHour.add(0.0);
+			}
 		}
 
 		return consumptionPerHour;
@@ -76,6 +90,7 @@ public class ConsumoServiceImpl implements IConsumoService {
 		}
 
 		return resultados;
+
 	}
 
 	@Override
@@ -84,7 +99,8 @@ public class ConsumoServiceImpl implements IConsumoService {
 		Calendar hoy = Calendar.getInstance();
 
 		// Establece la fecha en la que quieres calcular la semana
-		hoy.set(2022, Calendar.OCTOBER, 26);
+		// TODO: setear la fecha de manera dinámica.
+		hoy.set(2022, Calendar.OCTOBER, 12);
 
 		// Obtiene el día de la semana de la fecha establecida
 		int diaSemana = hoy.get(Calendar.DAY_OF_WEEK);
@@ -125,4 +141,5 @@ public class ConsumoServiceImpl implements IConsumoService {
 			consumosByDay.add(0.0);
 		}
 	}
+
 }
