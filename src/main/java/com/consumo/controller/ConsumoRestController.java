@@ -1,6 +1,5 @@
 package com.consumo.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +27,11 @@ public class ConsumoRestController {
 	}
 
 	@GetMapping("/daily")
-	public List<Double> daily(@RequestBody Consumer request) {
+	public Map<String, Double> daily(@RequestBody Consumer request) {
 		if (request.getPeriod().equalsIgnoreCase("daily")) {
 			return consumoService.getConsumoByDate(request.getDate());
 		}
-		return new ArrayList<>();
+		return new HashMap<>();
 	}
 
 	@GetMapping("/monthly")

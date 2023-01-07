@@ -1,14 +1,11 @@
 package com.consumo.service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,48 +24,48 @@ public class ConsumoServiceImpl implements IConsumoService {
 		return (List<Consumo>) consumoRepository.findAll();
 	}
 
-	/*
-	 * @Override public List<Double> getConsumoByDate(String meterDate) { double
-	 * maximumConsumption = 0; double minimumConsumption = 9999999; double
-	 * dailyConsumption = 0; String startWith = "00";
-	 * 
-	 * List<Consumo> consumptionPerDay =
-	 * consumoRepository.getConsumoByDate(meterDate); List<Double>
-	 * consumptionPerHour = new ArrayList<>();
-	 * 
-	 * for (int i = 1; i <= 24; i++) { // Recorriendo la 24 horas del día
-	 * 
-	 * maximumConsumption = 0; minimumConsumption = 9999999; dailyConsumption = 0;
-	 * 
-	 * for (Consumo consumption : consumptionPerDay) { // Por cada consumo if
-	 * (consumption.getMeterHour().startsWith(startWith)) {
-	 * System.err.println(consumption.getMeterHour()); if
-	 * (consumption.getActiveEnergy() > maximumConsumption) { maximumConsumption =
-	 * consumption.getActiveEnergy(); } if (consumption.getActiveEnergy() <
-	 * minimumConsumption) { minimumConsumption = consumption.getActiveEnergy(); }
-	 * 
-	 * } }
-	 * 
-	 * if (i >= 11) { startWith = String.valueOf(i); } else { startWith =
-	 * String.valueOf("0" + i); } dailyConsumption = maximumConsumption -
-	 * minimumConsumption;
-	 * 
-	 * if (dailyConsumption != -9999999) { consumptionPerHour.add(dailyConsumption);
-	 * } else { consumptionPerHour.add(0.0); } }
-	 * 
-	 * return consumptionPerHour; }
-	 */
 	@Override
-	public List<Double> getConsumoByDate(String meterDate) {
+	public Map<String, Double> getConsumoByDate(String meterDate) {
+		double maximumConsumption = 0;
+		double minimumConsumption;
+		double dailyConsumption = 0;
+		String startWith = "00";
+
+		SortedMap<String, Double> consumptionPerHour = new TreeMap<>();
 		List<Consumo> consumptionPerDay = consumoRepository.getConsumoByDate(meterDate);
 
-		return IntStream.range(0, 24).mapToObj(i -> String.format("%02d", i))
-				.map(hour -> consumptionPerDay.stream()
-						.filter(consumption -> consumption.getMeterHour().startsWith(hour))
-						.mapToDouble(Consumo::getActiveEnergy).summaryStatistics())
-				.mapToDouble(statistics -> statistics.getMax() - statistics.getMin()).boxed()
-				.map(consumption -> consumption == -9999999 ? 0.0 : consumption).collect(Collectors.toList());
+		for (int i = 1; i <= 24; i++) { // Recorriendo la 24 horas del día
 
+			maximumConsumption = 0;
+			minimumConsumption = 9999999;
+
+			for (Consumo consumption : consumptionPerDay) { // Por cada consumo
+				if (consumption.getMeterHour().startsWith(startWith)) {
+					if (consumption.getActiveEnergy() > maximumConsumption) {
+						maximumConsumption = consumption.getActiveEnergy();
+					}
+					if (consumption.getActiveEnergy() < minimumConsumption) {
+						minimumConsumption = consumption.getActiveEnergy();
+					}
+
+				}
+			}
+
+			if (i >= 10) {
+				startWith = String.valueOf(i);
+			} else {
+				startWith = String.valueOf("0" + i);
+			}
+			dailyConsumption = maximumConsumption - minimumConsumption;
+
+			if (dailyConsumption != -9999999) {
+				consumptionPerHour.put(startWith + ":00:00", dailyConsumption);
+			} else {
+				consumptionPerHour.put(startWith + ":00:00", 0.0);
+			}
+		}
+
+		return consumptionPerHour;
 	}
 
 	@Override
@@ -96,27 +93,29 @@ public class ConsumoServiceImpl implements IConsumoService {
 
 	@Override
 	public Map<String, Double> getConsumoByWeek(String meterDate) {
-		List<Double> resultados = new ArrayList<>();
 		SortedMap<String, Double> consumptionPerDays = new TreeMap<>();
-		
+		String[] dateParts = meterDate.split("-");
+		String year = dateParts[0];
+		String month = dateParts[1];
+		String day = dateParts[2];
+
 		// Crea un objeto Calendar para representar la fecha de hoy
-		Calendar hoy = Calendar.getInstance();
+		Calendar date = Calendar.getInstance();
 
 		// Establece la fecha en la que quieres calcular la semana
-		// TODO: setear la fecha de manera dinámica.
-		hoy.set(2022, Calendar.OCTOBER, 26);
+		date.set(Integer.parseInt(year), evaluateMonth(Integer.parseInt(month) - 1, date), Integer.parseInt(day));
 
 		// Obtiene el día de la semana de la fecha establecida
-		int diaSemana = hoy.get(Calendar.DAY_OF_WEEK);
+		int diaSemana = date.get(Calendar.DAY_OF_WEEK);
 
 		// Obtiene el primer día de la semana (lunes)
-		hoy.add(Calendar.DATE, -diaSemana-1 + Calendar.MONDAY);
+		date.add(Calendar.DATE, -diaSemana - 1 + Calendar.MONDAY);
 
 		// Imprime las fechas de la semana
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for (int i = 0; i < 7; i++) {
-			hoy.add(Calendar.DATE, 1);
-			getConsumosByDay(sdf.format(hoy.getTime()), consumptionPerDays);
+			date.add(Calendar.DATE, 1);
+			getConsumosByDay(sdf.format(date.getTime()), consumptionPerDays);
 		}
 
 		return consumptionPerDays;
@@ -129,7 +128,7 @@ public class ConsumoServiceImpl implements IConsumoService {
 	 * @param consumosByDay lista a agregar el consumo diario.
 	 * @author Juan Carlos Estevez Vargas.
 	 */
-	private void getConsumosByDay(String meterDate,  SortedMap<String, Double> mapa) {
+	private void getConsumosByDay(String meterDate, SortedMap<String, Double> mapa) {
 		try {
 			List<Consumo> consumosPorDia = consumoRepository.getConsumoByDate(meterDate);
 			if (consumosPorDia != null) {
@@ -144,6 +143,50 @@ public class ConsumoServiceImpl implements IConsumoService {
 			mapa.put(meterDate, 0.0);
 		}
 
+	}
+
+	private int evaluateMonth(int month, Calendar date) {
+		switch (month) {
+		case 0: {
+			return Calendar.JANUARY;
+		}
+		case 1: {
+			return Calendar.FEBRUARY;
+		}
+		case 2: {
+			return Calendar.MARCH;
+		}
+		case 3: {
+			return Calendar.APRIL;
+		}
+		case 4: {
+			return Calendar.MAY;
+		}
+		case 5: {
+			return Calendar.JUNE;
+		}
+		case 6: {
+			return Calendar.JULY;
+		}
+		case 7: {
+			return Calendar.AUGUST;
+		}
+		case 8: {
+			return Calendar.SEPTEMBER;
+		}
+		case 9: {
+			return Calendar.OCTOBER;
+		}
+		case 10: {
+			return Calendar.NOVEMBER;
+		}
+		case 11: {
+			return Calendar.DECEMBER;
+		}
+
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + month);
+		}
 	}
 
 }

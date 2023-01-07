@@ -26,7 +26,7 @@ public interface IConsumoService {
 	 * @return Listado con los consumos por hora.
 	 * @author Juan Carlos Estevz Vargas.
 	 */
-	List<Double> getConsumoByDate(String meterDate);
+	Map<String, Double> getConsumoByDate(String meterDate);
 
 	/**
 	 * Calcula y obtiene los consumos de electridad diario en un periodo de un mes,
