@@ -1,7 +1,9 @@
 package com.consumo.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,19 +36,19 @@ public class ConsumoRestController {
 	}
 
 	@GetMapping("/monthly")
-	public List<Double> monthly(@RequestBody Consumer request) {
+	public Map<String, Double> monthly(@RequestBody Consumer request) {
 		if (request.getPeriod().equalsIgnoreCase("monthly")) {
 			return consumoService.getConsumoByMonth(request.getDate());
 		}
-		return new ArrayList<>();
+		return new HashMap<>();
 	}
 
 	@GetMapping("/weekly")
-	public List<Double> weekly(@RequestBody Consumer request) {
+	public Map<String, Double> weekly(@RequestBody Consumer request) {
 		if (request.getPeriod().equalsIgnoreCase("weekly")) {
 			return consumoService.getConsumoByWeek(request.getDate());
 		}
-		return new ArrayList<>();
+		return new HashMap<>();
 	}
 
 }

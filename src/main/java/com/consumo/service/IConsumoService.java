@@ -1,6 +1,7 @@
 package com.consumo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public interface IConsumoService {
 	 * @return Listado con los consumos diarios.
 	 * @author Juan Carlos Estevz Vargas.
 	 */
-	List<Double> getConsumoByMonth(String meterDate);
+	Map<String, Double> getConsumoByMonth(String meterDate);
 
 	/**
 	 * Calcula y obtiene los registros de consumo de electricidad por dia en un
@@ -46,5 +47,5 @@ public interface IConsumoService {
 	 * @return Listado con los consumos diarios.
 	 * @author Juan Carlos Estevz Vargas.
 	 */
-	List<Double> getConsumoByWeek(String meterDate);
+	Map<String, Double> getConsumoByWeek(String meterDate);
 }
