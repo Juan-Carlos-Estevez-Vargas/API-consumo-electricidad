@@ -146,47 +146,15 @@ public class ConsumoServiceImpl implements IConsumoService {
 	}
 
 	private int evaluateMonth(int month, Calendar date) {
-		switch (month) {
-		case 0: {
-			return Calendar.JANUARY;
-		}
-		case 1: {
-			return Calendar.FEBRUARY;
-		}
-		case 2: {
-			return Calendar.MARCH;
-		}
-		case 3: {
-			return Calendar.APRIL;
-		}
-		case 4: {
-			return Calendar.MAY;
-		}
-		case 5: {
-			return Calendar.JUNE;
-		}
-		case 6: {
-			return Calendar.JULY;
-		}
-		case 7: {
-			return Calendar.AUGUST;
-		}
-		case 8: {
-			return Calendar.SEPTEMBER;
-		}
-		case 9: {
-			return Calendar.OCTOBER;
-		}
-		case 10: {
-			return Calendar.NOVEMBER;
-		}
-		case 11: {
-			return Calendar.DECEMBER;
-		}
-
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + month);
-		}
+	    int[] months = {
+	        Calendar.JANUARY, Calendar.FEBRUARY, Calendar.MARCH, Calendar.APRIL,
+	        Calendar.MAY, Calendar.JUNE, Calendar.JULY, Calendar.AUGUST,
+	        Calendar.SEPTEMBER, Calendar.OCTOBER, Calendar.NOVEMBER, Calendar.DECEMBER
+	    };
+	    if (month < 0 || month >= months.length) {
+	        throw new IllegalArgumentException("Unexpected value: " + month);
+	    }
+	    return months[month];
 	}
 
 }
