@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.consumo.entity.RequestData;
 import com.consumo.entity.ElectricalConsumtion;
-import com.consumo.service.IConsumoService;
+import com.consumo.service.IConsumptionService;
 
 @RestController
 @RequestMapping("/consumption")
 public class ConsumptionRestController {
 
 	@Autowired
-	private IConsumoService consumptionService;
+	private IConsumptionService consumptionService;
 
 	@GetMapping("/findAll")
 	public List<ElectricalConsumtion> list() {

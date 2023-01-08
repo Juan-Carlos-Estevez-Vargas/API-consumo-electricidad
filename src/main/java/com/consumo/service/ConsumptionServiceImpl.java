@@ -14,7 +14,7 @@ import com.consumo.entity.ElectricalConsumtion;
 import com.consumo.repository.IConsumptionRepository;
 
 @Service
-public class ConsumoServiceImpl implements IConsumoService {
+public class ConsumptionServiceImpl implements IConsumptionService {
 
 	@Autowired
 	private IConsumptionRepository consumptionRepository;

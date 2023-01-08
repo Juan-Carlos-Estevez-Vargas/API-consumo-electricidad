@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.consumo.entity.ElectricalConsumtion;
 
 @Service
-public interface IConsumoService {
+public interface IConsumptionService {
 
 	/**
 	 * Obtiene un listado con todos los registros de la base de datos de tipo
