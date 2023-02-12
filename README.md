@@ -15,10 +15,15 @@ Como tercer paso se necesita dar click derecho sobre el proyecto, run as Spring 
 Para el proyecto se plantearon 4 end points, los cuales pueden ser probados mediante postman o por un curl:
 * Postman: para ello, es necesario importar el siguiente [archivo](https://github.com/Juan-Carlos-Estevez-Vargas/API-consumo-electricidad/blob/master/postman_end_points/Consumo-Electricidad.postman_collection.json)
 * CURL: 
-  * Obtener Consumo periodo daily: curl -X GET "http://localhost:8080/consumption/daily" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"date\": \"2022-10-13\", \"period\": \"daily\"}"
-  * Obtener Consumo periodo monthly: curl -X GET "http://localhost:8080/consumption/monthly" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"date\": \"2022-10-13\", \"period\": \"monthly\"}"
-  * Obtener Consumo periodo weekly: curl -X GET "http://localhost:8080/consumption/weekly" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"date\": \"2022-10-13\", \"period\": \"weekly\"}"
-  
+
+  ```bash
+  curl -X GET "http://localhost:8080/consumption/daily" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"date\": \"2022-10-13\", \"period\": \"daily\"}"
+
+  curl -X GET "http://localhost:8080/consumption/monthly" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"date\": \"2022-10-13\", \"period\": \"monthly\"}"
+
+  curl -X GET "http://localhost:8080/consumption/monthly" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"date\": \"2022-10-13\", \"period\": \"weekly\"}"
+
+  ```
 ## Explicación código paso a paso.
 
 Puedes ver todo el proceso de construcción en mi canal de [YouTube](https://www.youtube.com/watch?v=RsF7nlLo5c0)
