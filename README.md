@@ -15,7 +15,6 @@ Como tercer paso se necesita dar click derecho sobre el proyecto, run as Spring 
 Para el proyecto se plantearon 4 end points, los cuales pueden ser probados mediante postman o por un curl:
 * Postman: para ello, es necesario importar el siguiente [archivo](https://github.com/Juan-Carlos-Estevez-Vargas/API-consumo-electricidad/blob/master/postman_end_points/Consumo-Electricidad.postman_collection.json)
 * CURL: 
-
   ```bash
   curl -X GET "http://localhost:8080/consumption/daily" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"date\": \"2022-10-13\", \"period\": \"daily\"}"
 
@@ -25,7 +24,6 @@ Para el proyecto se plantearon 4 end points, los cuales pueden ser probados medi
 
   ```
 ## Explicación código paso a paso.
-
 Puedes ver todo el proceso de construcción en mi canal de [YouTube](https://www.youtube.com/watch?v=RsF7nlLo5c0)
 
 ### Si te ha gustado el proyecto invitame un café
@@ -38,5 +36,5 @@ Puedes ver todo el proceso de construcción en mi canal de [YouTube](https://www
   </a>
 </div>
 
-## 🌐 Socials
+## 🌐 Redes Sociales
 [![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?logo=Facebook&logoColor=white)](https://facebook.com/juancarlos.estevezvargas.98) [![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white)](https://instagram.com/juankestevez) [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/juan-carlos-estevez-vargas) [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?logo=YouTube&logoColor=white)](https://youtube.com/@apuntesdeuningeniero) 
